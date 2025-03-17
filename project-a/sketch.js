@@ -1,9 +1,10 @@
 function setup() {
-  // createCanvas(800, 500);
+  createCanvas(800, 500);
     let canvas = createCanvas(800, 500);
     canvas.id('p5-canvas');
     canvas.parent('p5-canvas-container');
-  background('#FFFDCD');
+  canvas1();
+  noCursor();
   circleX = width / 2;
   circleY = height / 2;
   speedX = 0;
@@ -11,20 +12,30 @@ function setup() {
   accel = 10;
   sinV = sin(frameCount*0.1)*20+30;
   angle = 0;
-   
 }
-function mousePressed(){
-  canvas1();
-}
+
 function draw() {
-  if (frameCount<1500){
+  if (frameCount<1100){
     background('#FFFDCD');
+    canvas1()
+  }else{
+    cursor(CROSS)
   }
+  if (frameCount==1101){
+    background(0)
+  }
+  if (frameCount<1000){
+    push();
+    translate(mouseX,mouseY);
+    rotate(5.5);
+    brush(0,0);
+    pop();
+  }  
   if (circleX>width-sinV || circleX<sinV){
-    speedX = -speedX
+    speedX = - 2 * speedX
   }
   if (circleY>height-sinV || circleY<sinV){
-    speedY = -speedY
+    speedY = - 2 * speedY
   }
   drawCreature(circleX,circleY);
   gravity();
@@ -52,7 +63,7 @@ function drawCreature(x, y) {
     for(let i =0;i<2;i+=0.5){
       sinV = sin(frameCount*0.1+i)*20+30
       cosV = cos(frameCount*0.1+i)*20+30
-      if (frameCount<1500){
+      if (frameCount<1099){
         push()
         rotate(radians(45))
         stroke(0)
@@ -118,7 +129,7 @@ function gravity(){
   let dx = mouseX - circleX;
   let dy = mouseY - circleY;
   let dis = sqrt(dx*dx+dy*dy);
-  if(dis > 0.1){
+  if(dis > 1){
     let f= accel/(dis*dis);
     let accelX = f*dx;
     let accelY = f*dy;
@@ -145,13 +156,24 @@ function mousePressed(){
   canvas1()
 }
 
+function brush(x,y){
+  strokeWeight(8);
+  stroke('#D68204');
+  line(x,y,x,y+95);
+  strokeWeight(1);
+  fill(230);
+  quad(x-4,y,x+4,y,x+6,y-9,x-6,y-9);
+}
+
 function canvas1(){
-  background('#FFFDCD');
+  if (frameCount<1000){
+    randomSeed(15);
+  }
   noStroke();
   fill("#CDFCFF");
   for (let x = 0; x < 40; x++) {
     for (let y = 0; y < 25; y++) {
-      let randomPick = random(0, 200);
+      let randomPick = random(0, 500);
       let posX = x * 20 + 10;
       let posY = y * 20 + 10;
       noStroke();
